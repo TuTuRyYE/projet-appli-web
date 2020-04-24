@@ -19,6 +19,15 @@ public class Facade {
 	EntityManager em;
 	
 	@POST
+	@Path("/adduser")
+    @Consumes({ "application/json" })
+	public String addUser(User u) {
+		System.out.println("user");
+		em.persist(u);
+		return "utilisateur ajouté";
+	}
+	
+	@POST
 	@Path("/addperson")
     @Consumes({ "application/json" })
 	public void addPerson(Person p) {

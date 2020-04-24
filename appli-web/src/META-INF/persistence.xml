@@ -10,6 +10,7 @@
         
         <class>pack.Person</class>
         <class>pack.Address</class>
+        <class>pack.User</class>
         
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />

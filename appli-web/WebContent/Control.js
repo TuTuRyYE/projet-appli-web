@@ -29,7 +29,9 @@ function loadAddPerson() {
 		$("#BTValAddPerson").click(function() {
 			person = {};
 			person.firstName=$("#FirstName").val();
-			person.lastName=$("#LastName").val();		
+			person.lastName=$("#LastName").val();
+			let test = JSON.stringify(person);
+			alert(test);
 			invokePost("rest/addperson", person, "person was added", "failed to add a person");
 			loadMain();
 		});

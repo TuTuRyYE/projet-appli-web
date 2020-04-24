@@ -10,15 +10,24 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Utilisateur {
+public class User {
 	
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)  
+	int id;
 	String pseudo;
 	String email;
 	String mdp;
 	
 	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getPseudo() {
 		return pseudo;
