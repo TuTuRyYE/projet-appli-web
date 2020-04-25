@@ -7,9 +7,22 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 @Entity
+@NamedQueries({
+	@NamedQuery(
+		    name="searchPseudo",
+		    query="SELECT u FROM User u WHERE u.pseudo =:pseudo"
+		),
+	@NamedQuery(
+		    name="searchEmail",
+		    query="SELECT u FROM User u WHERE u.email =:email"
+		)
+})
+
 public class User {
 	
 	@Id
