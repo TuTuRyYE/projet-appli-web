@@ -11,15 +11,21 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
+
 @Entity
 @NamedQueries({
 	@NamedQuery(
-		    name="searchPseudo",
-		    query="SELECT u FROM User u WHERE u.pseudo =:pseudo"
+		    name="searchUsername",
+		    query="SELECT u FROM User u WHERE u.username =:username"
 		),
 	@NamedQuery(
 		    name="searchEmail",
 		    query="SELECT u FROM User u WHERE u.email =:email"
+		),
+	@NamedQuery(
+			name="searchUser",
+			query="SELECT u FROM User u WHERE u.username =:user "
+					+ "OR u.email =:user"
 		)
 })
 
@@ -28,9 +34,10 @@ public class User {
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)  
 	int id;
-	String pseudo;
+	String username;
 	String email;
-	String mdp;
+	String password;
+	String authentificationToken;
 	
 	
 
@@ -42,12 +49,12 @@ public class User {
 		this.id = id;
 	}
 
-	public String getPseudo() {
-		return pseudo;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setPseudo(String pseudo) {
-		this.pseudo = pseudo;
+	public void setUsername(String pseudo) {
+		this.username = pseudo;
 	}
 
 	public String getEmail() {
@@ -58,14 +65,25 @@ public class User {
 		this.email = email;
 	}
 
-	public String getMdp() {
-		return mdp;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setMdp(String mdp) {
-		this.mdp = mdp;
+	public void setPassword(String mdp) {
+		this.password = mdp;
 	}
 
+	public String getAuthentificationToken() {
+		return authentificationToken;
+	}
+
+	public void setAuthentificationToken(String authentificationToken) {
+		this.authentificationToken = authentificationToken;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + "]";
+	}
 	
-
 }

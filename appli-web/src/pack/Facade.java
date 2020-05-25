@@ -5,7 +5,9 @@ import java.util.List;
 
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.NamedQuery;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -14,25 +16,26 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
 @Singleton
 @Path("/")
 public class Facade {
 
-	@PersistenceContext
-	EntityManager em;
+	@PersistenceContext(name="MaPU", unitName="MaPU")
+	private EntityManager em;
 	
 	@POST
 	@Path("/adduser")
     @Consumes({ "application/json" })
 	public String addUser(User u) {
 		//on check qu'un champ n'est pas vide 
-		if(u.getPseudo() == "" || u.getEmail() == "" || u.getMdp() == "") {
+		if(u.getUsername() == "" || u.getEmail() == "" || u.getPassword() == "") {
 			return "badInput";
 		}
 		//on check si l'utilisateur n'a pas déjà le même email et pseudo
-		TypedQuery<User> queryPseudo = em.createNamedQuery("searchPseudo", User.class);
-		queryPseudo.setParameter("pseudo", u.getPseudo());
+		TypedQuery<User> queryPseudo = em.createNamedQuery("searchUsername", User.class);
+		queryPseudo.setParameter("username", u.getUsername());
 		List<User> lpseudo = queryPseudo.getResultList();
 		TypedQuery<User> queryEmail = em.createNamedQuery("searchEmail", User.class);
 		queryEmail.setParameter("email", u.getEmail());
@@ -44,6 +47,26 @@ public class Facade {
 		} else {
 			em.persist(u);
 			return "newUserAdded";
+		}
+	}
+	
+	@Path("/authentification")
+	@POST
+	@Produces("application/json")
+	@Consumes("application/json")
+	public Response authentificateUser(Credentials cre) {
+		try {
+			System.out.println("authentification");
+			String username = cre.getUsername();
+			String password = cre.getPassword();
+			//AuthentificationEndpoint aep = new AuthentificationEndpoint(em);
+			//aep.authentificate(username, password);
+			//String token = aep.issueToken(username);
+			//System.out.println(token);
+			return Response.ok("token").build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.FORBIDDEN).build();
 		}
 	}
 	

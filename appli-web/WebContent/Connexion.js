@@ -6,13 +6,21 @@ $(document).ready(function() {
 	loadConnexion("","");
 });
 
-function loadConnexion(email, pass) {
+function loadConnexion(username, password) {
 	
 	$("#Main").load("Connexion.html", function() {
-		$("#user-email").val(email);
-		$("#user-pass").val(pass);
+		$("#user-name").val(username);
+		$("#user-pass").val(password);
 		$("#login").click(function() {
-			//à faire
+			credentials = {};
+			credentials.username = $("#user-name").val();
+			credentials.password = $("#user-pass").val();
+			var b64 = btoa(credentials.username+":"+credentials.password);
+			console.log(b64);
+			ajaxPost("rest/secured/message", credentials, b64, isJSON=true, function(response) {
+				console.log(response);
+				}
+			);
 		});
 		$("#signup").click(function() {
 			loadSignup();
@@ -24,10 +32,10 @@ function loadSignup() {
 	$("#Main").load("CreationCompte.html", function() {
 		$("#register").click(function() {
 			user = {};
-			user.pseudo=$("#user-name").val();
-			user.email=$("#user-email").val();
-			user.mdp=$("#user-pass").val();
-			ajaxPost("rest/adduser", user, isJSON=true, function(response) {
+			user.username=$("#user-name").val().trim();
+			user.email=$("#user-email").val().trim();
+			user.password=$("#user-pass").val().trim();
+			ajaxPost("rest/adduser", user, "", isJSON=true, function(response) {
 				console.log(response);
 				if(response == "emailAlreadyUsed") {
 					$("#ShowMessage").text("Un utilisateur possède déjà cet email")
@@ -36,7 +44,7 @@ function loadSignup() {
 				} else if(response == "badInput") {
 					$("#ShowMessage").text("Veuillez remplir correctement les différents champs")
 				} else {
-					loadConnexion(user.email, user.mdp);
+					loadConnexion(user.name, user.password);
 					$("#ShowMessage").text("Votre compte a été crée");
 				}
 				}
@@ -67,7 +75,7 @@ function ajaxGet(url, callback) {
 //Exécute un appel AJAX POST
 //Prend en paramètres l'URL cible, la donnée à envoyer et la fonction callback appelée en cas de succès
 //Le paramètre isJson permet d'indiquer si l'envoi concerne des données JSON
-function ajaxPost(url, data, isJSON, callback) {
+function ajaxPost(url, data, authorizationToken, isJSON, callback) {
  var req = new XMLHttpRequest();
  req.open("POST", url);
  req.addEventListener("load", function () {
@@ -83,6 +91,7 @@ function ajaxPost(url, data, isJSON, callback) {
  });
  if (isJSON) {
      // Définit le contenu de la requête comme étant du JSON
+	 req.setRequestHeader("Authorization", "Basic " + authorizationToken);
      req.setRequestHeader("Content-Type", "application/json");
      // Transforme la donnée du format JSON vers le format texte avant l'envoi
      data = JSON.stringify(data);
