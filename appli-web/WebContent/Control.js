@@ -3,27 +3,16 @@
  */
 
 $(document).ready(function() {
-	loadMain();
+	loadProfil();
 });
 
-function loadMain() {
-	$("#Main").load("Main.html", function() {
-		$("#BTAddPerson").click(function() {
-			loadAddPerson();
-		});
-		$("#BTAddAddress").click(function() {
-			loadAddAddress();
-		});
-		$("#BTAssociate").click(function() {
-			loadAssociate();
-		});
-		$("#BTList").click(function() {
-			loadList();
-		});
+function loadProfil() {
+	$("#Main").load("page_profil.html", function() {
+		
 	});
 }
 
-function loadAddPerson() {
+function loadFilm(idFilm) {
 	$("#ShowMessage").empty();
 	$("#Main").load("AddPerson.html", function() {
 		$("#BTValAddPerson").click(function() {

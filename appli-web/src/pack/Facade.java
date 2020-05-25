@@ -50,26 +50,6 @@ public class Facade {
 		}
 	}
 	
-	@Path("/authentification")
-	@POST
-	@Produces("application/json")
-	@Consumes("application/json")
-	public Response authentificateUser(Credentials cre) {
-		try {
-			System.out.println("authentification");
-			String username = cre.getUsername();
-			String password = cre.getPassword();
-			//AuthentificationEndpoint aep = new AuthentificationEndpoint(em);
-			//aep.authentificate(username, password);
-			//String token = aep.issueToken(username);
-			//System.out.println(token);
-			return Response.ok("token").build();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Response.status(Response.Status.FORBIDDEN).build();
-		}
-	}
-	
 	@POST
 	@Path("/addperson")
     @Consumes({ "application/json" })

@@ -15,6 +15,7 @@ function loadConnexion(username, password) {
 			credentials = {};
 			credentials.username = $("#user-name").val();
 			credentials.password = $("#user-pass").val();
+			console.log(credentials);
 			var b64 = btoa(credentials.username+":"+credentials.password);
 			console.log(b64);
 			ajaxPost("rest/secured/message", credentials, b64, isJSON=true, function(response) {

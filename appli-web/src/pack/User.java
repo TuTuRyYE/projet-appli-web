@@ -37,7 +37,6 @@ public class User {
 	String username;
 	String email;
 	String password;
-	String authentificationToken;
 	
 	
 
@@ -71,14 +70,6 @@ public class User {
 
 	public void setPassword(String mdp) {
 		this.password = mdp;
-	}
-
-	public String getAuthentificationToken() {
-		return authentificationToken;
-	}
-
-	public void setAuthentificationToken(String authentificationToken) {
-		this.authentificationToken = authentificationToken;
 	}
 
 	@Override
