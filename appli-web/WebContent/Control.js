@@ -58,12 +58,43 @@ function loadSignup() {
 	});
 }
 
+function loadNavbar() {
+	$("#Navbar").load("Navbar.html", function() {
+		$("#search").val("");
+		$("#searchButton").click(function() {
+			filmName = $("#search").val().trim();
+			console.log(filmName);
+			ajaxGet("http://www.omdbapi.com/?apikey=2a61fcd&t="+filmName, "", function(response) {
+				console.log(response);
+				if(response.response != "False") {
+					loadFilm(response);
+				}
+				}
+			);
+		});
+		$("#signup").click(function() {
+			loadSignup();
+		});
+	});
+}
+
 function loadProfil(username) {
-	$("#Navbar").load("Navbar.html");
+	$("#ShowMessage").text("");
+	loadNavbar("");
 	$("#Footer").load("Footer.html");
 	$("#Main").load("page_profil.html", function() {
 		
 				
+		});
+}
+
+function loadFilm(infosFilm) {
+	var infosJSON = JSON.parse(infosFilm);
+	$("#ShowMessage").text("");
+	$("#Main").load("page_film.html", function() {
+		$("#Poster").attr("src", infosJSON.Poster);
+		$("#Title").text(infosJSON.Title);
+		$("#Year").text("Année : "+infosJSON.Year);	
 		});
 }
 
@@ -73,7 +104,9 @@ function loadProfil(username) {
 function ajaxGet(url, authorizationToken, callback) {
  var req = new XMLHttpRequest();
  req.open("GET", url);
- req.setRequestHeader("Authorization", "Basic " + authorizationToken);
+ if(authorizationToken != "") {
+	 req.setRequestHeader("Authorization", "Basic " + authorizationToken);
+ }
  req.addEventListener("load", function () {
      if (req.status >= 200 && req.status < 400) {
          // Appelle la fonction callback en lui passant la réponse de la requête

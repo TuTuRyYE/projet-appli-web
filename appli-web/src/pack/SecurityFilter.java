@@ -41,7 +41,7 @@ public class SecurityFilter implements ContainerRequestFilter{
 				queryPseudo.setParameter("username", username);
 				List<User> lpseudo = queryPseudo.getResultList();
 				if(lpseudo.size() > 0) {
-					if(username.equals("tuturyye") && password.equals("toto")) {
+					if(username.equals(lpseudo.get(0).getUsername()) && password.equals(lpseudo.get(0).getPassword())) {
 						return;
 					}
 					Response unauthorizedStatus = Response.status(Response.Status.UNAUTHORIZED).entity("User cannot access the ressource.").build();
