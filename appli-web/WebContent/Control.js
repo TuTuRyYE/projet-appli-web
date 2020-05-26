@@ -2,6 +2,7 @@
  * 
  */
 var b64_credentials;
+varcurrentUser; 
 
 $(document).ready(function() {
 	loadConnexion("","");
@@ -22,6 +23,8 @@ function loadConnexion(username, password) {
 			ajaxGet("rest/secured/login", b64_credentials, function(response) {
 				console.log(response);
 				if(response == "Connected") {
+					currentUser = credentials.username;
+					console.log("Current user: " + currentUser);
 					loadProfil(credentials.username);
 				}
 				}
@@ -99,6 +102,10 @@ function loadFilm(infosFilm) {
 		$("#Director").text("De : "+infosJSON.Director);
 		$("#Runtime").text("Durée : "+infosJSON.Duration);
 		$("#Actors").text("Avec : "+infosJSON.Actors);
+		
+		$("#ajoutListe").click(function() {
+			
+		});
 		});
 }
 
