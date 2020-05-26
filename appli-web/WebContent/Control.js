@@ -1,120 +1,117 @@
 /**
  * 
  */
+var b64_credentials;
 
 $(document).ready(function() {
-	loadProfil();
+	loadConnexion("","");
 });
 
-function loadProfil() {
+function loadConnexion(username, password) {
+	
+	$("#Main").load("Connexion.html", function() {
+		$("#user-name").val(username);
+		$("#user-pass").val(password);
+		$("#login").click(function() {
+			credentials = {};
+			credentials.username = $("#user-name").val();
+			credentials.password = $("#user-pass").val();
+			console.log(credentials);
+			b64_credentials = btoa(credentials.username+":"+credentials.password);
+			console.log(b64_credentials);
+			ajaxGet("rest/secured/login", b64_credentials, function(response) {
+				console.log(response);
+				if(response == "Connected") {
+					loadProfil(credentials.username);
+				}
+				}
+			);
+		});
+		$("#signup").click(function() {
+			loadSignup();
+		});
+	});
+}
+
+function loadSignup() {
+	$("#Main").load("CreationCompte.html", function() {
+		$("#register").click(function() {
+			user = {};
+			user.username=$("#user-name").val().trim();
+			user.email=$("#user-email").val().trim();
+			user.password=$("#user-pass").val().trim();
+			ajaxPost("rest/adduser", user, "", isJSON=true, function(response) {
+				console.log(response);
+				if(response == "emailAlreadyUsed") {
+					$("#ShowMessage").text("Un utilisateur possède déjà cet email")
+				} else if(response == "pseudoAlreadyUsed") {
+					$("#ShowMessage").text("Un utilisateur possède déjà ce pseudo")
+				} else if(response == "badInput") {
+					$("#ShowMessage").text("Veuillez remplir correctement les différents champs")
+				} else {
+					loadConnexion(user.username, user.password);
+					$("#ShowMessage").text("Votre compte a été crée");
+				}
+				}
+			);
+		});
+	});
+}
+
+function loadProfil(username) {
+	$("#Navbar").load("Navbar.html");
+	$("#Footer").load("Footer.html");
 	$("#Main").load("page_profil.html", function() {
 		
-	});
-}
-
-function loadFilm(idFilm) {
-	$("#ShowMessage").empty();
-	$("#Main").load("AddPerson.html", function() {
-		$("#BTValAddPerson").click(function() {
-			person = {};
-			person.firstName=$("#FirstName").val();
-			person.lastName=$("#LastName").val();
-			let test = JSON.stringify(person);
-			alert(test);
-			invokePost("rest/addperson", person, "person was added", "failed to add a person");
-			loadMain();
+				
 		});
-	});
 }
 
-function loadAddAddress() {
-	$("#ShowMessage").empty();
-	$("#Main").load("AddAddress.html", function() {
-		$("#BTValAddAddress").click(function() {
-			address = {};
-			address.street=$("#Street").val();
-			address.city=$("#City").val();		
-			invokePost("rest/addaddress", address, "address was added", "failed to add an address");
-			loadMain();
-		});
-	});
+
+//Exécute un appel AJAX GET
+//Prend en paramètres l'URL cible et la fonction callback appelée en cas de succès
+function ajaxGet(url, authorizationToken, callback) {
+ var req = new XMLHttpRequest();
+ req.open("GET", url);
+ req.setRequestHeader("Authorization", "Basic " + authorizationToken);
+ req.addEventListener("load", function () {
+     if (req.status >= 200 && req.status < 400) {
+         // Appelle la fonction callback en lui passant la réponse de la requête
+         callback(req.responseText);
+     } else {
+         console.error(req.status + " " + req.statusText + " " + url);
+     }
+ });
+ req.addEventListener("error", function () {
+     console.error("Erreur réseau avec l'URL " + url);
+ });
+ req.send(null);
 }
 
-function loadAssociate() {
-	$("#ShowMessage").empty();
-	$("#Main").load("Associate.html", function() {
-		var listPersons, listAddresses;
-		invokeGet("rest/listpersons", "failed to list persons", function(response) {
-			listPersons = response;
-			if (listPersons == null) return;
-			listAddresses = invokeGet("rest/listaddresses", "failed to list addresses", function(response) {
-				listAddresses = response;
-				if (listAddresses == null) return;	
-				for (var i=0; i < listPersons.length; i++) {
-					var person = listPersons[i];					
-					$("#ListOfPersons").append("<input type='radio' name='PersonId' value='"+person.id+"'>"+person.firstName+" "+person.lastName+"<br>");
-				}
-				for (var j=0; j < listAddresses.length; j++) {
-					var address = listAddresses[j];					
-					$("#ListOfAddresses").append("<input type='radio' name='AddressId' value='"+address.id+"'>"+address.street+" "+address.city+"<br>");
-				}
-				$("#BTValAssociate").click(function() {
-					ass = {};
-					ass.personId=$("input[name='PersonId']:checked").val();
-					ass.addressId=$("input[name='AddressId']:checked").val();
-					invokePost("rest/associate", ass, "association was created", "failed to create association");
-					loadMain();
-				});
-			});
-		});
-	});
-}
-	
-function loadList() {
-	$("#ShowMessage").empty();
-	listPersons = invokeGet("rest/listpersons", "failed to list persons", function(response) {
-		var list;
-		listPersons = response;
-		if (listPersons == null) return;
-		list="<ul>";
-		for (var i=0; i < listPersons.length; i++) {
-			var person = listPersons[i];					
-			list+="<li>"+person.firstName+" "+person.lastName+"</li>";
-			list+="<ul>";
-			for (var j=0; j < person.addresses.length; j++) {
-				var address = person.addresses[j];
-				list+="<li>"+address.street+" "+address.city+"</li>";
-			}
-			list+="</ul><br>";
-		}
-		list+="</ul><br>";
-		$("#Main").empty();
-		$("#Main").append(list);
-	});
-}
-
-function invokePost(url, data, successMsg, failureMsg) {
-	jQuery.ajax({
-	    url: url,
-	    type: "POST",
-	    data: JSON.stringify(data),
-	    dataType: "json",
-	    contentType: "application/json; charset=utf-8",
-	    success: function (response) {
-	    	$("#ShowMessage").text(successMsg);
-	    },
-	    error: function (response) {
-	    	$("#ShowMessage").text(failureMsg);
-	    }
-	});
-}
-function invokeGet(url, failureMsg, responseHandler) {
-	jQuery.ajax({
-	    url: url,
-	    type: "GET",
-	    success: responseHandler,
-	    error: function (response) {
-	    	$("#ShowMessage").text(failureMsg);
-	    }
-	});
+//Exécute un appel AJAX POST
+//Prend en paramètres l'URL cible, la donnée à envoyer et la fonction callback appelée en cas de succès
+//Le paramètre isJson permet d'indiquer si l'envoi concerne des données JSON
+function ajaxPost(url, data, authorizationToken, isJSON, callback) {
+ var req = new XMLHttpRequest();
+ req.open("POST", url);
+ req.addEventListener("load", function () {
+     if (req.status >= 200 && req.status < 400) {
+         // Appelle la fonction callback en lui passant la réponse de la requête
+         callback(req.responseText);
+     } else {
+         console.error(req.status + " " + req.statusText + " " + url);
+     }
+ });
+ req.addEventListener("error", function () {
+     console.error("Erreur réseau avec l'URL " + url);
+ });
+ if (isJSON) {
+     // Définit le contenu de la requête comme étant du JSON
+	 req.setRequestHeader("Authorization", "Basic " + authorizationToken);
+     req.setRequestHeader("Content-Type", "application/json");
+     // Transforme la donnée du format JSON vers le format texte avant l'envoi
+     data = JSON.stringify(data);
+     console.log(data);
+ }
+ req.send(data);
 }
