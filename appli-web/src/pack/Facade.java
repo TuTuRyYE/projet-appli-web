@@ -79,14 +79,5 @@ public class Facade {
 		return em.createQuery("from Address", Film.class).getResultList();	
 	}
 	
-	@POST
-	@Path("/associate")
-    @Consumes({ "application/json" })
-	public void associate(Association as) {
-		System.out.println(as.getPersonId() +" "+ as.getAddressId());
-		User p = em.find(User.class, as.getPersonId());
-		Film a = em.find(Film.class, as.getAddressId());
-		a.setUser(p);
-	}
 	
 }

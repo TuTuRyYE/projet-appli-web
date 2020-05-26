@@ -1,14 +1,11 @@
 package pack;
 
-import java.time.LocalDate;
 import java.util.Collection;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -40,7 +37,7 @@ public class User {
 	String email;
 	String password;
 	
-	@OneToMany(mappedBy="user", fetch = FetchType.EAGER)
+	@OneToMany
 	Collection<Film> films;
 
 	public int getId() {

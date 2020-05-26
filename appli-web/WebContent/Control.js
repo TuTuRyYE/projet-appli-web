@@ -92,21 +92,27 @@ function loadProfil(username) {
 }
 
 function loadFilm(infosFilm) {
-	var infosJSON = JSON.parse(infosFilm);
+	let infosJSON = JSON.parse(infosFilm);
+	let infoDB = {"imdbID":infosJSON.imdbID};
 	$("#ShowMessage").text("");
-	$("#Main").load("page_film.html", function() {
-		$("#Poster").attr("src", infosJSON.Poster);
-		$("#Title").text(infosJSON.Title);
-		$("#Year").text("Année : "+infosJSON.Year);
-		$("#Genre").text("Genre : "+infosJSON.Genre);
-		$("#Director").text("De : "+infosJSON.Director);
-		$("#Runtime").text("Durée : "+infosJSON.Runtime);
-		$("#Actors").text("Avec : "+infosJSON.Actors);
-		
-		$("#ajoutListe").click(function() {
+	ajaxPost("rest/secured/infoFilm", infoDB, b64_credentials, isJSON=true, function(response) {
+		let filmOwnDB = JSON.parse(response);
+		$("#Main").load("page_film.html", function() {
+			$("#Poster").attr("src", infosJSON.Poster);
+			$("#Title").text(infosJSON.Title);
+			$("#Year").text("Année : "+infosJSON.Year);
+			$("#Genre").text("Genre : "+infosJSON.Genre);
+			$("#Director").text("De : "+infosJSON.Director);
+			$("#Runtime").text("Durée : "+infosJSON.Runtime);
+			$("#Actors").text("Avec : "+infosJSON.Actors);
+			$("#nbVue").text("Nombre de vue : "+filmOwnDB.nbVue);
 			
-		});
-		});
+			$("#ajoutListe").click(function() {
+				
+			});
+			});
+	});
+	
 }
 
 
