@@ -94,7 +94,11 @@ function loadFilm(infosFilm) {
 	$("#Main").load("page_film.html", function() {
 		$("#Poster").attr("src", infosJSON.Poster);
 		$("#Title").text(infosJSON.Title);
-		$("#Year").text("Année : "+infosJSON.Year);	
+		$("#Year").text("Année : "+infosJSON.Year);
+		$("#Genre").text("Genre : "+infosJSON.Genre);
+		$("#Director").text("De : "+infosJSON.Director);
+		$("#Runtime").text("Durée : "+infosJSON.Duration);
+		$("#Actors").text("Avec : "+infosJSON.Actors);
 		});
 }
 
