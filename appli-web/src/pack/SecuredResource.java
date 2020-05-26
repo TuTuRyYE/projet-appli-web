@@ -10,8 +10,8 @@ import javax.ws.rs.Produces;
 @Path("secured")
 public class SecuredResource {
 	
-	@PersistenceContext(name="MaPU", unitName="MaPU")
-	private EntityManager em;
+	//@PersistenceContext(name="MaPU", unitName="MaPU")
+	//private EntityManager em;
 	
 	@GET
 	@Path("login")

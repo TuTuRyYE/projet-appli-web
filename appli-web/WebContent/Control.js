@@ -2,7 +2,7 @@
  * 
  */
 var b64_credentials;
-varcurrentUser; 
+var currentUser; 
 
 $(document).ready(function() {
 	loadConnexion("","");
@@ -100,7 +100,7 @@ function loadFilm(infosFilm) {
 		$("#Year").text("Année : "+infosJSON.Year);
 		$("#Genre").text("Genre : "+infosJSON.Genre);
 		$("#Director").text("De : "+infosJSON.Director);
-		$("#Runtime").text("Durée : "+infosJSON.Duration);
+		$("#Runtime").text("Durée : "+infosJSON.Runtime);
 		$("#Actors").text("Avec : "+infosJSON.Actors);
 		
 		$("#ajoutListe").click(function() {

@@ -40,7 +40,7 @@ public class User {
 	String email;
 	String password;
 	
-	@ManyToMany(mappedBy="owner", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="user", fetch = FetchType.EAGER)
 	Collection<Film> films;
 
 	public int getId() {
