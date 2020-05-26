@@ -19,7 +19,6 @@ public class Person {
 	String lastName;
 	
 	@OneToMany(mappedBy="owner", fetch = FetchType.EAGER)
-	Collection<Address> addresses;
 
 	public int getId() {
 		return id;
@@ -45,13 +44,6 @@ public class Person {
 		this.lastName = lastName;
 	}
 
-	public Collection<Address> getAddresses() {
-		return addresses;
-	}
-
-	public void setAddresses(Collection<Address> addresses) {
-		this.addresses = addresses;
-	}
 
 	
 }

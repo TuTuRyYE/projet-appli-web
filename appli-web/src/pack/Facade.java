@@ -61,7 +61,7 @@ public class Facade {
 	@POST
 	@Path("/addaddress")
     @Consumes({ "application/json" })
-	public void addAddress(Address a) {
+	public void addAddress(Film a) {
 		em.persist(a);
 	}
 	
@@ -75,8 +75,8 @@ public class Facade {
 	@GET
 	@Path("/listaddresses")
     @Produces({ "application/json" })
-	public Collection<Address> listAddress() {
-		return em.createQuery("from Address", Address.class).getResultList();	
+	public Collection<Film> listAddress() {
+		return em.createQuery("from Address", Film.class).getResultList();	
 	}
 	
 	@POST
@@ -84,9 +84,9 @@ public class Facade {
     @Consumes({ "application/json" })
 	public void associate(Association as) {
 		System.out.println(as.getPersonId() +" "+ as.getAddressId());
-		Person p = em.find(Person.class, as.getPersonId());
-		Address a = em.find(Address.class, as.getAddressId());
-		a.setOwner(p);
+		User p = em.find(User.class, as.getPersonId());
+		Film a = em.find(Film.class, as.getAddressId());
+		a.setUser(p);
 	}
 	
 }

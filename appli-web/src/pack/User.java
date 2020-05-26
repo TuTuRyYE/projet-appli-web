@@ -1,5 +1,6 @@
 package pack;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 import javax.persistence.Entity;
@@ -38,7 +39,8 @@ public class User {
 	String email;
 	String password;
 	
-	
+	@OneToMany(mappedBy="owner", fetch = FetchType.EAGER)
+	Collection<Film> films;
 
 	public int getId() {
 		return id;
@@ -70,6 +72,14 @@ public class User {
 
 	public void setPassword(String mdp) {
 		this.password = mdp;
+	}
+	
+	public Collection<Film> getFilm() {
+		return films;
+	}
+
+	public void setAddresses(Collection<Film> films) {
+		this.films = films;
 	}
 
 	@Override
